@@ -50,6 +50,7 @@ public class Customer implements ISmartphone{
 
                     Drink orderedDrink = this.cafe.getOrder(order);
                     this.setHand(orderedDrink);
+                    break;
                 }
                 else {
                     if(this.asset >= drink.price) {
@@ -63,10 +64,12 @@ public class Customer implements ISmartphone{
 
                         Drink orderedDrink = this.cafe.getOrder(order);
                         this.setHand(orderedDrink);
+                        break;
 
                     }
                     else {
                         System.out.println(this.name+ ":: 돈이 없다...");
+                        break;
                     }
                 }
             }
