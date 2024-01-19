@@ -1,4 +1,4 @@
-package targetNumber;
+package programmers;
 class Solution {
     public int solution(int[] quest, int target) {
         int sumQuest = 0;
