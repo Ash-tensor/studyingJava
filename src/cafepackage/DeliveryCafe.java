@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class DeliveryCafe extends Cafe implements IDeliveryServiceAvailable {
     String name;
 

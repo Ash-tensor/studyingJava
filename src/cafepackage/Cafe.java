@@ -40,6 +40,10 @@ public class Cafe {
         return answer;
     }
 
+    public void setDeliveryServiceAvailable(boolean deliveryServiceAvailable) {
+        this.deliveryServiceAvailable = deliveryServiceAvailable;
+    }
+
     public List<Drink> getMenu() {
         return menu;
     }
@@ -85,6 +89,25 @@ public class Cafe {
         else {
             System.out.println("이 가게는 배달을 하지 않습니다.");
             return null;
+        }
+    }
+
+    public void makeDeliveryService(Order order) {
+        if(this.deliveryServiceAvailable) {
+        // 주문이 완성되었으면
+            if (DeliveryApp.transaction.get(order)) {
+                System.out.println("주문하신 " + order.orderCode + "를 " +
+                        order.customer.address + "로 배송 시작합니다");
+
+        //        order.customer.setHand();
+
+            }
+            else {
+                System.out.println("아직 주문하신 음료가 완성되지 않았습니다.");
+            }
+        }
+        else {
+            System.out.println("이 카페는 배달을 하지 않습니다.");
         }
     }
 }

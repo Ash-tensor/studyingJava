@@ -8,18 +8,6 @@ public class Order {
     String StartingPoint;
     Drink menu;
     Customer customer;
-
-    public Order(IDeliveryServiceAvailable cafe, Customer customer, int orderCode, String destination, Drink drink) {
-        DeliveryCafe tempCafe = (DeliveryCafe)cafe;
-        this.destination = destination;
-//        Cafe tempCafe = (Cafe)cafe;
-        this.customer = customer;
-        this.menu = drink;
-        this.SellerName = tempCafe.getName();
-        String location = tempCafe.getLocation();
-        this.StartingPoint = tempCafe.getLocation();
-        this.orderCode = SellerName + location + menu + orderCode;
-    }
     public Order(Cafe cafe, Customer customer, int orderCode, String destination, Drink drink) {
         this.destination = destination;
 //        Cafe tempCafe = (Cafe)cafe;

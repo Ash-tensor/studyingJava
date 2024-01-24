@@ -25,7 +25,11 @@ public class Sequence {
         haioMenu.add(MIcedAmericano);
         haioMenu.add(SIcedAmericano);
 
-        DeliveryCafe haioCafe = new DeliveryCafe("HAIO", "Seoul", haioMenu);
+        Cafe haioCafe = new Cafe("HAIO", "Seoul", haioMenu);
+
+        yogiyo.register(haioCafe);
+
+        haioCafe.setDeliveryServiceAvailable(true);
 
         yogiyo.register(haioCafe);
 
@@ -40,9 +44,7 @@ public class Sequence {
 
         Cafe mammothCafe = new Cafe("MAMMOTH", "Seoul", mammothMenu);
 
-
         System.out.println(App.getAppStore());
-
 
         me.installingApp("yogiyo");
         me.usingApp(me.appList.get(0));
