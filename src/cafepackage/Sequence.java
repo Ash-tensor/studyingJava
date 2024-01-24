@@ -10,7 +10,7 @@ public class Sequence {
         Customer who = new Customer("who", "outside");
         Customer me = new Customer("me", "home");
 
-        CreditCard myCreditCard = new CreditCard(me);
+        CreditCard myCreditCard = new CreditCard(me, true);
         me.setCreditCard(myCreditCard);
 
         yogiyo.registerAppstore();

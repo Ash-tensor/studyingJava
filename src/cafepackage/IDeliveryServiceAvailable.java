@@ -1,7 +1,6 @@
 package cafepackage;
 
-public interface IDeliverable {
+public interface IDeliveryServiceAvailable {
     public void makeDeliveryService(Order order);
     public Drink getDeliveryOrder(Order order);
-
 }

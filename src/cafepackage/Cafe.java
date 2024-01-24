@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Cafe {
     Customer customer;
+    public boolean deliveryServiceAvailable = false;
     private int sales = 0;
     private int orderNumber;
     private String name;
@@ -74,5 +75,16 @@ public class Cafe {
         Drink orderedDrink = this.makeDrink(order);
 
         return orderedDrink;
+    }
+
+    public Drink getDeliveryOrder(Order order) {
+        if (this.deliveryServiceAvailable) {
+            Drink orderedDrink = this.getOrder(order);
+            return orderedDrink;
+        }
+        else {
+            System.out.println("이 가게는 배달을 하지 않습니다.");
+            return null;
+        }
     }
 }

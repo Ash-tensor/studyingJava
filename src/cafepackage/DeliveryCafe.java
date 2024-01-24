@@ -4,19 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DeliveryCafe extends Cafe implements IDeliverable {
+public class DeliveryCafe extends Cafe implements IDeliveryServiceAvailable {
     String name;
-    public Map<Order, Boolean> cafeTransaction = new HashMap<>();
 
     public DeliveryCafe(String name, String location, List<Drink> menu) {
         super(name, location, menu);
         this.name = name;
     }
 
-
     @Override
     public Drink makeDrink(Order order) {
-
         DeliveryApp.transaction.put(order, true);
         return super.makeDrink(order);
     }

@@ -9,7 +9,7 @@ public class Order {
     Drink menu;
     Customer customer;
 
-    public Order(IDeliverable cafe, Customer customer, int orderCode, String destination, Drink drink) {
+    public Order(IDeliveryServiceAvailable cafe, Customer customer, int orderCode, String destination, Drink drink) {
         DeliveryCafe tempCafe = (DeliveryCafe)cafe;
         this.destination = destination;
 //        Cafe tempCafe = (Cafe)cafe;
