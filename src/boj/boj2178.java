@@ -1,109 +1,70 @@
 package boj;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class boj2178 {
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, 1, 0, -1};
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        int mapX = scanner.nextInt();
+        int[] condition = new int[2];
+        condition[0] = scanner.nextInt();
+        condition[1] = scanner.nextInt();
         scanner.nextLine();
-        int mapY = scanner.nextInt();
-        scanner.nextLine();
 
-        int[] tempStartNode = {0,0};
-        int[] goal = {mapX-1, mapY-1};
-
-        ArrayList<int[]> startNode = new ArrayList<>();
-        startNode.add(tempStartNode);
-
-        ArrayList<String> tempMap = new ArrayList<>();
-
-        for(int i=0; i < mapX; i++) {
-            String rowString = scanner.nextLine();
-            tempMap.add(rowString);
+        int[][] theMap = new int[condition[0]][condition[1]];
+        for(int i = 0; i < condition[0]; i++) {
+            String temp = scanner.nextLine();
+            for(int j = 0; j < temp.length(); j++) {
+                theMap[i][j] = temp.charAt(j) - '0';
+            }
         }
 
-        int[][]theMap = mapper(tempMap);
-        int answer = bfs_to_goal(theMap, startNode, goal);
+        int[] startNode = {0, 0};
+        int[] goal = {condition[0] - 1, condition[1] - 1};
+        int answer = bfsToGoal(theMap, startNode, goal);
         System.out.println(answer);
     }
 
-    public static int[][] mapper(ArrayList<String> theMap) {
-        int[][] answer = new int[theMap.size()][theMap.get(0).length()];
-        int lowNum = 0;
-        for(String string : theMap) {
-            int yNum = 0;
-            char[] temp = string.toCharArray();
-            for(char i : temp) {
-                answer[lowNum][yNum] = Integer.parseInt(Character.toString(i)); // << 와 실화냐
-                yNum++;
+    public static ArrayList<int[]> connectedNodeChecker(int[][] theMap, int x, int y) {
+        ArrayList<int[]> valuedConnectedNode = new ArrayList<>();
+        for(int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if(0 <= nx && nx < theMap.length && 0 <= ny && ny < theMap[0].length && theMap[nx][ny] == 1) {
+                int[] temp = {nx, ny};
+                valuedConnectedNode.add(temp);
             }
-            lowNum++;
         }
-        return answer;
+        return valuedConnectedNode;
     }
 
-    public static int bfs_to_goal(int[][] the_map, ArrayList<int[]> startNode, int[] goal) {
-        ArrayDeque< ArrayList<int[]> > openList = new ArrayDeque<>();
-//        이게 안된다고?
-//        boolean[the_map.length][the_map[0].length] visitedNode = false;
-//        방문 노드 배열 생성
-        boolean[][] visitedNode = new boolean[the_map.length][the_map[0].length];
-        for(int i=0; i < the_map.length; i ++) {
-            for (int c=0; c < the_map[0].length; c++) {
-                visitedNode[i][c] = false;
-            }
-        }
-        openList.add(startNode);
-        visitedNode[startNode.get(0)[0]][startNode.get(0)[1]] = true;
+    public static int bfsToGoal(int[][] theMap, int[] startNode, int[] goal) {
+        Queue<ArrayList<int[]>> openList = new LinkedList<>();
+        boolean[][] visitedSet = new boolean[theMap.length][theMap[0].length];
+        ArrayList<int[]> tempStartNode = new ArrayList<>();
+        tempStartNode.add(startNode);
+        openList.add(tempStartNode);
+        visitedSet[startNode[0]][startNode[1]] = true;
 
-        // while(openList) <- 이거안됨
-        while(!openList.isEmpty()) {
-            ArrayList<int[]> selectedNode = openList.getFirst(); // < popleft
-            int[] lastSelectedNode = selectedNode.get(-1);
-
-            if(lastSelectedNode.equals(goal)) {
+        while (!openList.isEmpty()) {
+            ArrayList<int[]> selectedNode = openList.poll();
+            int[] lastSelectedNode = selectedNode.get(selectedNode.size() - 1);
+            if (Arrays.equals(lastSelectedNode, goal)) {
                 return selectedNode.size();
             }
 
-            ArrayList<int[]> connectedNodeList =
-                    connectedNodeChecker(the_map, lastSelectedNode[0], lastSelectedNode[1]);
-
-            for(int[] node : connectedNodeList ) {
-                if(!visitedNode[node[0]][node[1]]){
-                    // 방문안했으면
-//                    ArrayList<int[]> clonedSelectedNode = selectedNode.clone();
-//                    와 clone도 얕은 복사야? 끔찍하네 진짜
+            ArrayList<int[]> connectedNodeList = connectedNodeChecker(theMap, lastSelectedNode[0], lastSelectedNode[1]);
+            for(int[] i : connectedNodeList) {
+                if (!visitedSet[i[0]][i[1]]) {
+                    visitedSet[i[0]][i[1]] = true;
                     ArrayList<int[]> clonedSelectedNode = new ArrayList<>(selectedNode);
-                    clonedSelectedNode.add(node);
-                    openList.addLast(clonedSelectedNode);
-                    visitedNode[node[0]][node[1]] = true;
+                    clonedSelectedNode.add(i);
+                    openList.add(clonedSelectedNode);
                 }
             }
         }
         return -1;
-    }
-
-    public static ArrayList<int[]> connectedNodeChecker(int[][] the_map, int x, int y) {
-        int dx[] = {-1, 0, 1, 0};
-        int dy[] = {0, 1, 0, -1};
-
-        ArrayList<int[]> valuedConnectedNode = new ArrayList<>();
-        for (int i : dx) {
-            int nx = x + i;
-            int ny = y + i;
-
-            if(0 <= nx && nx < the_map.length) {
-                if (0 <= ny && ny < the_map[0].length) {
-                    if (the_map[nx][ny] == 1) {
-                        int[] temp = {nx, ny};
-                        valuedConnectedNode.add(temp);
-                    }
-                }
-            }
-        }
-        return valuedConnectedNode;
     }
 }
