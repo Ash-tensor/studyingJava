@@ -1,5 +1,6 @@
 package boj;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -48,6 +49,18 @@ public class boj12100 {
         }
         return tempBoard;
     }
+    public static int[] connectedNodeChecker() {}
+
+    public static void BFS() {
+        int[] problemSpace = {1, 2, 3, 4};
+        ArrayDeque<Integer> openList = new ArrayDeque<>();
+
+        while (true) {
+
+        }
+
+    }
+
 
 }
 class node {
