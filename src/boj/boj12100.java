@@ -255,9 +255,17 @@ class board {
         }
     }
     public void right() {
+        // 모든 노드에 대해서 오른쪽 노드로 이동
+//        for (node[] x : model) {
+//            for (node y : x) {
+//                y.rightMove();
+//            }
+//        }
+        // 근데 위의 left식으로 구현하면 안 됨, 왜냐하면 가장 오른편부터 합쳐져야 하기 때문임
+        int max = model.length - 1;
         for (node[] x : model) {
-            for (node y : x) {
-                y.rightMove();
+            for (int i = max; i >= 0; i--) {
+                x[i].rightMove();
             }
         }
     }
@@ -269,9 +277,18 @@ class board {
         }
     }
     public void down() {
-        for (node[] x : model) {
-            for (node y : x) {
-                y.downMove();
+//        for (node[] x : model) {
+//            for (node y : x) {
+//                y.downMove();
+//            }
+//        }
+
+        // 근데 위의 down 식으로 구현하면 안 됨, 왜냐하면 가장 아래쪽부터 합쳐져야 하기 때문임니당
+        int max = model.length - 1;
+        for (int i = max; i >= 0; i--) {
+            node[] targetRow = model[i];
+            for (node x : targetRow) {
+                x.downMove();
             }
         }
     }
