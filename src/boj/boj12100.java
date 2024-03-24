@@ -7,14 +7,53 @@ public class boj12100 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<node> nodeList = new ArrayList<>();
+        node[][] inputModel = gameSetter(scanner);
+        board Board = new board(inputModel);
 
+
+        while (true) {
+            System.out.println("왼쪽 0, 오른쪽 1, 위 2, 아래 3");
+            int condition = scanner.nextInt();
+            switch (condition) {
+                case 0 :
+                    Board.left();
+                    break;
+                case 1 :
+                    Board.right();
+                    break;
+                case 2 :
+                    Board.up();
+                    break;
+                case 3 :
+                    Board.down();
+                    break;
+            }
+            System.out.println();
+            Board.printBoard();
+        }
+    }
+    public static node[][] gameSetter(Scanner scanner) {
+        int boardSize = scanner.nextInt();
+        scanner.nextLine();
+
+        node[][] tempBoard = new node[boardSize][boardSize];
+
+        for (int i = 0; i < boardSize; i++) {
+            for (int k = 0; k < boardSize; k++) {
+                int[] coordinate = {i, k};
+                int tempValue = scanner.nextInt();
+                node tempNode = new node(tempValue, coordinate, tempBoard);
+            }
+            scanner.nextLine();
+        }
+        return tempBoard;
     }
 }
 class node {
     node[][] model;
     int value;
     int[] coordinate;
-
+// 생성자임
     public node(int value, int[] coordinate, node[][] model) {
         this.model = model;
         this.value = value;
@@ -72,12 +111,40 @@ class node {
     public void upMove() {
         if (upCheck() == 1) {
             int temp = this.value;
-            node targetNode = this.model[this.coordinate[0]][this.coordinate[1]];
+            node targetNode = this.model[this.coordinate[0] - 1][this.coordinate[1]];
+            targetNode.value = temp;
+            this.value = 0;
+            targetNode.upMove();
+        } else if (upCheck() == 0) {}
+        else {
+            node targetNode = this.model[this.coordinate[0] - 1][this.coordinate[1]];
+            if (targetNode.value == this.value) {
+                targetNode.value = targetNode.value * 2;
+                this.value = 0;
+                targetNode.upMove();
+            }
+        }
+    }
+    public void downMove() {
+//        downCheck는 0이면 움직일 수 없는 곳, 1이면 움직일 수 있는 곳,
+        if (downCheck() == 1) {
+            int temp = this.value;
+            node targetNode = this.model[this.coordinate[0] + 1][this.coordinate[1]];
+            targetNode.value = temp;
+            this.value = 0;
+            targetNode.downMove();
+        } else if (downCheck() == 0) {}
+//        1도 0도 아닌 정수값인경우
+        else {
+            node targetNode = this.model[this.coordinate[0] + 1][this.coordinate[1]];
+            if (targetNode.value == this.value) {
+                targetNode.value = targetNode.value * 2;
+                this.value = 0;
+                targetNode.downMove();
+            }
         }
 
     }
-    public void downMove() {}
-
     public int leftCheck() {
         int xIndex = this.coordinate[0];
         int yIndex = this.coordinate[1];
@@ -99,7 +166,8 @@ class node {
     public int rightCheck() {
         int xIndex = this.coordinate[0];
         int yIndex = this.coordinate[1];
-        // 문제 공간은 정사각형 형태이고 가장 오른쪽에 위치해 있을 때
+        // 문제 공간은 정사각형 형태이고 가장 오른쪽에 위치해 있을 때이고
+        // length는 index보다 1높게 나오므로 1빼줘야함 ㅇㄱㄹㅇ
         if (yIndex == this.model[0].length - 1) {
             return 0;
         }
@@ -129,7 +197,12 @@ class node {
             }
         }
     }
-    public int downCHeck() {
+    /**
+     * 아래로 움직일 수 있는지 아닌지를 검사하는 함수임
+     *
+     * @return 아래로 움직일 수 있으면 0, 아래로 움직일 수 없으면 1, 다른 값이면 해당 노드의 값을 리턴
+     */
+    public int downCheck() {
         int xIndex = this.coordinate[0];
         int yIndex = this.coordinate[1];
         if (xIndex == this.model[0].length - 1) {
@@ -148,46 +221,58 @@ class node {
 }
 class board {
     node[][] model;
-    ArrayList<node> nodeList;
 
-    public board(int value, ArrayList<node> nodeList) {
-        this.model = new node[value][value];
-        this.nodeList = nodeList;
+    public board(node[][] inputModel) {
+        //정사각형이니까
+        this.model = inputModel;
+    }
+    public void printBoard() {
+        for (node[] x : model) {
+            for (node y : x) {
+                System.out.printf("%d ", y.value);
+            }
+            System.out.println();
+        }
     }
 
 
     public void setModel(node[][] model) {
         this.model = model;
     }
-
-    public void boardUpdate() {
-
-    }
     public node[][] getModel() {
         return model;
     }
-    public void left() {
-        for(node[] x : this.model){
-            for (node y : x) {
-                // 왼쪽 노드를 확인해서 비어있는게 false가 될 때까지 이동
-                while(y.leftCheck()) {
-                    y.
 
-                }
+    /**
+     * 모든 노드에 대해서 왼쪽 명령을 내림
+     */
+    public void left() {
+        // 모든 노드에 대해서 왼쪽 노드로 이동
+        for (node[] x : model) {
+            for (node y : x) {
+                y.leftMove();
             }
         }
-//        모든 블록이 왼편으로 감
-//
-
     }
     public void right() {
-
+        for (node[] x : model) {
+            for (node y : x) {
+                y.rightMove();
+            }
+        }
     }
     public void up() {
-
+        for (node[] x : model) {
+            for (node y : x) {
+                y.upMove();
+            }
+        }
     }
     public void down() {
-
+        for (node[] x : model) {
+            for (node y : x) {
+                y.downMove();
+            }
+        }
     }
-
 }
