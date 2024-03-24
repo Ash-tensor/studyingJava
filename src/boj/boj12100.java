@@ -48,6 +48,7 @@ public class boj12100 {
         }
         return tempBoard;
     }
+
 }
 class node {
     node[][] model;
@@ -86,7 +87,9 @@ class node {
             if (targetNode.value == this.value) {
                 targetNode.value = targetNode.value * 2;
                 this.value = 0;
-                targetNode.leftMove();
+
+                // 보니까 한번만 합쳐지는것같음 모든 블록은 한번만 합쳐져야하기때문에 합친 후에는 연쇄콜을 하면 안됨
+//                targetNode.leftMove();
             }
         }
     }
@@ -104,7 +107,7 @@ class node {
             if (targetNode.value == this.value) {
                 targetNode.value = targetNode.value * 2;
                 this.value = 0;
-                targetNode.rightMove();
+//                targetNode.rightMove();
             }
         }
     }
@@ -121,7 +124,7 @@ class node {
             if (targetNode.value == this.value) {
                 targetNode.value = targetNode.value * 2;
                 this.value = 0;
-                targetNode.upMove();
+//                targetNode.upMove();
             }
         }
     }
@@ -140,7 +143,7 @@ class node {
             if (targetNode.value == this.value) {
                 targetNode.value = targetNode.value * 2;
                 this.value = 0;
-                targetNode.downMove();
+//                targetNode.downMove();
             }
         }
 
