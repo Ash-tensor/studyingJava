@@ -5,33 +5,58 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class boj12100 {
+    static int inputedMaximunNumber = 0;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<node> nodeList = new ArrayList<>();
         node[][] inputModel = gameSetter(scanner);
         board Board = new board(inputModel);
 
+        int allMaxNumber = 0;
+//        ArrayList<Integer> maxNumberOrder = new ArrayList<>();
 
-        while (true) {
-            System.out.println("왼쪽 0, 오른쪽 1, 위 2, 아래 3");
-            int condition = scanner.nextInt();
-            switch (condition) {
-                case 0 :
-                    Board.left();
-                    break;
-                case 1 :
-                    Board.right();
-                    break;
-                case 2 :
-                    Board.up();
-                    break;
-                case 3 :
-                    Board.down();
-                    break;
+        ArrayDeque<ArrayList<Integer>> orderList = BFS();
+        for (ArrayList<Integer> row : orderList) {
+            for (Integer order : row) {
+                orderInterpreter(order, Board);
+//                Board.printBoard();
             }
-            System.out.println();
-            Board.printBoard();
+            int tempMaxNumber = Board.getMaxNumber();
+            if (allMaxNumber < tempMaxNumber) {
+                allMaxNumber = tempMaxNumber;
+//                maxNumberOrder = row;
+            }
+            Board.resetBoard();
         }
+        System.out.println(allMaxNumber);
+//        for (Integer i : maxNumberOrder) {
+//            System.out.printf("%d ", i);
+//        }
+
+//  디버깅용 코드임 0 2 0 3 2
+//        while (true) {
+//            System.out.println("왼쪽 0, 오른쪽 1, 위 2, 아래 3, 초기화 4");
+//            int condition = scanner.nextInt();
+//            switch (condition) {
+//                case 0 :
+//                    Board.left();
+//                    break;
+//                case 1 :
+//                    Board.right();
+//                    break;
+//                case 2 :
+//                    Board.up();
+//                    break;
+//                case 3 :
+//                    Board.down();
+//                    break;
+//                case 4 :
+//                    Board.resetBoard();
+//                    break;
+//            }
+//            System.out.println();
+//            Board.printBoard();
+//        }
     }
     public static node[][] gameSetter(Scanner scanner) {
         int boardSize = scanner.nextInt();
@@ -43,37 +68,92 @@ public class boj12100 {
             for (int k = 0; k < boardSize; k++) {
                 int[] coordinate = {i, k};
                 int tempValue = scanner.nextInt();
+                inputedMaximunNumber += tempValue;
                 node tempNode = new node(tempValue, coordinate, tempBoard);
             }
             scanner.nextLine();
         }
         return tempBoard;
     }
-    public static int[] connectedNodeChecker() {}
 
-    public static void BFS() {
-        int[] problemSpace = {1, 2, 3, 4};
-        ArrayDeque<Integer> openList = new ArrayDeque<>();
+//    public static int[] connectedNode() {
+//        // 필요가 있나? 중복조합인데
+//    }
+    public static void orderInterpreter(int number, board Board) {
+        switch (number) {
+            case 0 :
+                Board.left();
+                break;
 
-        while (true) {
+            case 1 :
+                Board.right();
+                break;
 
+            case 2 :
+                Board.up();
+                break;
+
+            case 3 :
+                Board.down();
+                break;
         }
-
     }
 
+    public static ArrayDeque<ArrayList<Integer>> BFS() {
+        int[] problemSpace = {0,1,2,3};
+        ArrayDeque<ArrayList<Integer>> openList = new ArrayDeque<>();
+        ArrayDeque<ArrayList<Integer>> closedList = new ArrayDeque<>();
 
+        for (int i = 0; i < problemSpace.length; i++) {
+            int tempNode = problemSpace[i];
+            ArrayList<Integer> tempArray = new ArrayList<>();
+            tempArray.add(tempNode);
+            openList.add(tempArray);
+        }
+
+        while (true) {
+            if (openList.size() == 0) {
+                return closedList;
+            }
+            else {
+                ArrayList<Integer> selectedNode = openList.pollFirst();
+                if (selectedNode.size() == 5) {
+                    closedList.add(selectedNode);
+                }
+                else {
+                    for (int i : problemSpace) {
+                        ArrayList<Integer> clonedSelectedNode = new ArrayList<>(selectedNode);
+                        clonedSelectedNode.add(i);
+                        openList.add(clonedSelectedNode);
+                    }
+                }
+            }
+        }
+    }
 }
 class node {
     node[][] model;
     int value;
     int[] coordinate;
+    int initialValue;
+    boolean concated;
 // 생성자임
     public node(int value, int[] coordinate, node[][] model) {
+        this.initialValue = value;
         this.model = model;
         this.value = value;
         this.coordinate = coordinate;
         this.model[coordinate[0]][coordinate[1]] = this;
+        this.concated = false;
     }
+    public void concatedReset() {
+        this.concated = false;
+    }
+
+    public void reset() {
+        this.value = this.initialValue;
+    }
+
     // 그런데 그러면 board를 업데이트해야함
     public void leftMove() {
         if (leftCheck() == 1){
@@ -97,12 +177,16 @@ class node {
             // 만약 왼편에 존재하는 노드가 값을 가지고 있는 노드의 경우에는
             // << 현재 노드의 값과 같으면 합쳐진다
             node targetNode = this.model[this.coordinate[0]][this.coordinate[1] - 1];
-            if (targetNode.value == this.value) {
-                targetNode.value = targetNode.value * 2;
-                this.value = 0;
+            // << 왼편에 존재하는 노드가 값을 가지고 있고, 현재 노드의 값과 같아도 concated flag가 true 면 패스한다
+            if (!targetNode.concated) {
+                if (targetNode.value == this.value) {
+                    targetNode.value = targetNode.value * 2;
+                    this.value = 0;
+                    targetNode.concated = true;
 
-                // 보니까 한번만 합쳐지는것같음 모든 블록은 한번만 합쳐져야하기때문에 합친 후에는 연쇄콜을 하면 안됨
+                    // 보니까 한번만 합쳐지는것같음 모든 블록은 한번만 합쳐져야하기때문에 합친 후에는 연쇄콜을 하면 안됨
 //                targetNode.leftMove();
+                }
             }
         }
     }
@@ -117,10 +201,13 @@ class node {
         } else if (rightCheck() == 0) {}
         else {
             node targetNode = this.model[this.coordinate[0]][this.coordinate[1] + 1];
-            if (targetNode.value == this.value) {
-                targetNode.value = targetNode.value * 2;
-                this.value = 0;
+            if (!targetNode.concated) {
+                if (targetNode.value == this.value) {
+                    targetNode.value = targetNode.value * 2;
+                    this.value = 0;
+                    targetNode.concated = true;
 //                targetNode.rightMove();
+                }
             }
         }
     }
@@ -134,10 +221,13 @@ class node {
         } else if (upCheck() == 0) {}
         else {
             node targetNode = this.model[this.coordinate[0] - 1][this.coordinate[1]];
-            if (targetNode.value == this.value) {
-                targetNode.value = targetNode.value * 2;
-                this.value = 0;
+            if (!targetNode.concated) {
+                if (targetNode.value == this.value) {
+                    targetNode.value = targetNode.value * 2;
+                    this.value = 0;
+                    targetNode.concated = true;
 //                targetNode.upMove();
+                }
             }
         }
     }
@@ -153,10 +243,13 @@ class node {
 //        1도 0도 아닌 정수값인경우
         else {
             node targetNode = this.model[this.coordinate[0] + 1][this.coordinate[1]];
-            if (targetNode.value == this.value) {
-                targetNode.value = targetNode.value * 2;
-                this.value = 0;
+            if (!targetNode.concated) {
+                if (targetNode.value == this.value) {
+                    targetNode.value = targetNode.value * 2;
+                    this.value = 0;
+                    targetNode.concated = true;
 //                targetNode.downMove();
+                }
             }
         }
 
@@ -242,6 +335,14 @@ class board {
         //정사각형이니까
         this.model = inputModel;
     }
+    public void resetBoard() {
+        for (node[] nodes : model) {
+            for (node x : nodes) {
+                x.reset();
+            }
+        }
+    }
+
     public void printBoard() {
         for (node[] x : model) {
             for (node y : x) {
@@ -251,6 +352,17 @@ class board {
         }
     }
 
+    public int getMaxNumber() {
+        int maxNumber = 0;
+        for (node[] x : model) {
+            for (node y : x) {
+                if (y.value > maxNumber) {
+                    maxNumber = y.value;
+                }
+            }
+        }
+        return maxNumber;
+    }
 
     public void setModel(node[][] model) {
         this.model = model;
@@ -269,6 +381,12 @@ class board {
                 y.leftMove();
             }
         }
+        // 한번 움직임이 끝났으면 concated 플래그를 다시 reset 해야함
+        for (node[] x : model) {
+            for (node y : x) {
+                y.concatedReset();
+            }
+        }
     }
     public void right() {
         // 모든 노드에 대해서 오른쪽 노드로 이동
@@ -284,11 +402,21 @@ class board {
                 x[i].rightMove();
             }
         }
+        for (node[] x : model) {
+            for (node y : x) {
+                y.concatedReset();
+            }
+        }
     }
     public void up() {
         for (node[] x : model) {
             for (node y : x) {
                 y.upMove();
+            }
+        }
+        for (node[] x : model) {
+            for (node y : x) {
+                y.concatedReset();
             }
         }
     }
@@ -305,6 +433,11 @@ class board {
             node[] targetRow = model[i];
             for (node x : targetRow) {
                 x.downMove();
+            }
+        }
+        for (node[] x : model) {
+            for (node y : x) {
+                y.concatedReset();
             }
         }
     }

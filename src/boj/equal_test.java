@@ -31,8 +31,6 @@ public class equal_test {
         ArrayList<Integer> sameValueArray = new ArrayList<>();
         sameValueArray.add(1);
         sameValueArray.add(2);
-        testArrayList.add(sameValueArray);
-
         boolean question2 = testArrayList.contains(sameValueArray);
         System.out.println(question2);
 
