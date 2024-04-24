@@ -1,4 +1,4 @@
-package boj;
+package boj.engineer;
 
 class A_g {
     int i;

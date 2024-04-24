@@ -1,4 +1,4 @@
-package boj;
+package boj.engineer;
 
 public class engineer1 {
     public static void main(String[] args) {

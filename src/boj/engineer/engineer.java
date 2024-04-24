@@ -1,4 +1,4 @@
-package boj;
+package boj.engineer;
 
 public class engineer {
     public static void main(String[] args) {
@@ -27,3 +27,4 @@ class B extends A {
         System.out.print("D");
     }
 }
+

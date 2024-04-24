@@ -1,4 +1,4 @@
-package boj;
+package boj.engineer;
 
 class Person {
     private String name;
@@ -35,7 +35,7 @@ public class engineer2 {
         engineer2.name = "this";
         Person person = new Person("me");
         System.out.println(person.staticName);
-        //Static member 'boj.Person.staticName' accessed via instance reference
+        //Static member 'boj.engineer.Person.staticName' accessed via instance reference
         System.out.println(Person.staticName);
 
     }
