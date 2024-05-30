@@ -20,7 +20,19 @@ public class boj10816 {
     }
     // 타겟이 search에 있는가 없는가. 이거 정렬해야하는거 아님?
     public static boolean solution(int target) {
+        int middle = mid;
+        int max = cards.size();
         // 기준점을 잡아야겠네
+        while() {
+            if (target < middle) {
+                middle /= 2;
+            }
+            else if(target > middle) {
+                int temp = middle + cards.size();
+                middle = temp / 2;
+            }
+
+        }
 
     }
 
