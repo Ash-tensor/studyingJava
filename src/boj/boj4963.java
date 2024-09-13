@@ -29,24 +29,25 @@ public class boj4963 {
         }
     }
 
-    public static ArrayList<int[]> dfsWithNodes(int[] node, int[][] map,
-                                                int[][] visitedNodes,
-                                                ArrayList<int[]> islands) {
-
-        visitedNodes[node[0]][node[1]] = 1;
-        ArrayList<int[]> connectedNodes = getConnectedNodes(node, map, visitedNodes);
-
-        if (connectedNodes.isEmpty()) {
-            return islands;
-        }
-        else {
-            for (int[] x : connectedNodes) {
-                dfsWithNodes(x, map, visitedNodes, islands.add(x));
-
-            }
-        }
-
-    }
+//    public static ArrayList<int[]> dfsWithNodes(int[] node, int[][] map,
+//                                                int[][] visitedNodes,
+//                                                ArrayList<int[]> islands) {
+//
+//        visitedNodes[node[0]][node[1]] = 1;
+//        ArrayList<int[]> connectedNodes = getConnectedNodes(node, map, visitedNodes);
+//
+//        if (connectedNodes.isEmpty()) {
+//            return islands;
+//        }
+//        else {
+//            for (int[] x : connectedNodes) {
+//                ArrayList<int[]> tempIsland = new ArrayList<>(islands);
+//                tempIsland.add(x);
+//                dfsWithNodes(x, map, visitedNodes, tempIsland);
+//            }
+//        }
+//
+//    }
 
     public static int dfs(int[] node, int[][] map, int[][] visitedNodes) {
         // 가로, 세로, 대각으로 연결되어 있는 사각형은 걸어 갈 수 있는 사각형임
