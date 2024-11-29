@@ -25,19 +25,19 @@ public class boj10816 {
 
 
     }
-    public static Object binarySearch(ArrayList<Integer> targetArray, int targetNumber) {
-        // targetArray는 정렬되어 있다고 가정
-
-        int middle = targetArray.size() / 2;
-        int point = targetArray.get(middle);
-
-        if (targetNumber < point) {
-            List<Integer> complexSpace = targetArray.subList(0, middle);
-            binarySearch(complexSpace)
-        }
-
-
-    }
+//    public static Object binarySearch(ArrayList<Integer> targetArray, int targetNumber) {
+//        // targetArray는 정렬되어 있다고 가정
+//
+//        int middle = targetArray.size() / 2;
+//        int point = targetArray.get(middle);
+//
+//        if (targetNumber < point) {
+//            List<Integer> complexSpace = targetArray.subList(0, middle);
+//            binarySearch(complexSpace)
+//        }
+//
+//
+//    }
 
 
     public static ArrayList<Integer> quickSort(ArrayList<Integer> cards) {
